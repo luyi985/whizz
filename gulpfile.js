@@ -25,7 +25,7 @@ gulp.task('sass',function(){
         }))
         .pipe(sourcemaps.init())
         .pipe(sass())
-        .pipe(autoPrefixer())
+        .pipe(autoPrefixer({ browsers: ['last 2 versions', 'safari 5', 'ie 11', 'opera 12.1', 'ios 6', 'android 4'] }))
         .pipe(concat(config.dist.style.name))
         //.pipe(gulp.dest(config.dist.style.path))
         .pipe(rename({
