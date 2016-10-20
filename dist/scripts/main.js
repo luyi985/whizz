@@ -8429,7 +8429,7 @@ $("document").ready(function () {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-var apiKey = "be7d75745081bfaa0b235f6646de7c8d";
+var apiKey = "161db40db683c9acd864c22d26a3454f";
 var perPage = 20;
 var baseUrl = "https://api.flickr.com/services/rest/?api_key=" + apiKey + "&format=json&nojsoncallback=1&per_page=" + perPage;
 var searchApi = [baseUrl, "method=flickr.photos.search", "tags="].join("&");
