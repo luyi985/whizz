@@ -51,6 +51,8 @@ $animation: transform .5s ease;
 			width: 100%;
 			margin: 0;
 		}
+		&:focus,
+		&:active,
 		&:hover{
 			img{
 				transition: $animation;

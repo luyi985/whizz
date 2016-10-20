@@ -32,7 +32,7 @@ gulp.task('sass',function(){
             suffix: '.min'
         }))
         .pipe(cleanCss())
-        .pipe(sourcemaps.write())
+        //.pipe(sourcemaps.write())
         .pipe(gulp.dest(config.dist.style.path))
         .pipe(reload({stream: true}))
 });
