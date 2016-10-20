@@ -1,0 +1,61 @@
+
+.photo-details{
+
+	img{
+		width: 100%;
+	}
+	.photo-detail-owner{
+		&:before{
+			content: "Owner: ";
+			font-weight: bold;
+		}
+	}
+	.photo-detail-taken{
+		&:before{
+			content: "Taken: ";
+			font-weight: bold;
+		}
+	}
+	.photo-detail-url{
+		&:before{
+			content: "Url: ";
+			font-weight: bold;
+		}
+	}
+	.photo-detail-description{
+		&:before{
+			content: "Description: ";
+			font-weight: bold;
+		}
+	}
+	.photo-detail-img{
+		margin-bottom: 15px;
+		box-sizing: border-box;
+		@media all and (min-width: 560px){
+			min-height: 400px;
+		}
+	}
+	.modal-header{
+		margin-top: 0;
+	}
+	h1{
+		font-size: 3.0rem;
+		line-height: 1.1;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+	.close{
+		float: none;
+		position: absolute;
+		right: 0;
+		top: calc( 50% - 12px);
+	}
+}
+
+.modal-content .photo-detail-img{
+	opacity: 0;
+	transition: all .5s ease;
+}
+.modal-open .modal-content .photo-detail-img{
+	opacity: 1;
+}

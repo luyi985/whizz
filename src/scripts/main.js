@@ -2,7 +2,7 @@ import "babel-polyfill";
 import {state} from './state.js';
 import {searchByTags ,getPhotoDetail} from './services/apiService.js';
 import {photoDisplay, photoItem} from './services/photoDisplayService.js';
-
+import "../../node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js";
 
 
 let photoContainer= $("#js-photoDis");
@@ -26,14 +26,14 @@ let loadPhoto =(callBack) =>{
 		if(callBack){
 			callBack();
 		}
-		
+		$('.gallery-wrapper').clearQueue().fadeIn(500);
 	})
 }
 let loadCategory = () =>{
-	let categoryList= '<ul class="category-list"><li>'+
+	let categoryList= '<ul class="category-list list-group"><li class="list-group-item">'+
 						state.categories.map((cat)=>{
 							return "<a href="+cat+" class='js-category-item'>"+cat+"</a>"
-						}).join("</li><li>")+
+						}).join('</li><li class="list-group-item">')+
 						"</li>";
 	$(categoriesSelect).html(categoryList);
 }
@@ -83,8 +83,9 @@ $("document").ready(function(){
 		//-------state update-----------------
 		state.currentPhoto=$(this).attr('data-id');
 		$(photoDetailsContainer).addClass("active");
+		//$('body,html').addClass('lock');
 		getPhotoDetail(state.currentPhoto).done((data)=>{
-			$(photoDetailsContainer).find('h1').text(data.photo.title._content);
+			$(photoDetailsContainer).find('.modal-title').text(data.photo.title._content);
 			$(photoDetailsContainer).find(".js-photo-details-content").html(photoDisplay(data.photo));
 		})
 	});
@@ -92,6 +93,7 @@ $("document").ready(function(){
 	$('body').on('click','.js-photo-details-close', function(e){
 		$(photoDetailsContainer).removeClass("active");
 		$(photoDetailsContainer).find(".js-photo-details-content").html('');
+		//$('body,html').removeClass('lock');
 	});
 
 })

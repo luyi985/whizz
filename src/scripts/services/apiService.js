@@ -1,6 +1,6 @@
-
+let apiKey="be7d75745081bfaa0b235f6646de7c8d";
 let perPage=20;
-let baseUrl=" https://api.flickr.com/services/rest/?api_key=48daca318ea080f4513f975e6a084b05&format=json&nojsoncallback=1&per_page="+perPage;
+let baseUrl="https://api.flickr.com/services/rest/?api_key="+apiKey+"&format=json&nojsoncallback=1&per_page="+perPage;
 let searchApi= [baseUrl,"method=flickr.photos.search","tags="].join("&");
 let getDetailApi= [baseUrl,"method=flickr.photos.getInfo","photo_id="].join("&");
 

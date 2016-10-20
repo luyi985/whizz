@@ -2,7 +2,9 @@
 
 export let photoItem = (detail) =>{
    let imgSrc= "https://farm"+detail.farm+".staticflickr.com/"+detail.server+"/"+detail.id+"_"+detail.secret+"_q.jpg"
-   return $('<a href="#" data-title="'+detail.title+'" data-id="'+detail.id+'" class="js-photo-item photo-item"><img class="photo-item" src='+imgSrc+' /></a>')
+   return $('<a href="#" data-id="'+detail.id+'" class="js-photo-item photo-item" data-toggle="modal" data-target=".js-photo-details-container">'+
+    '<img class="photo-item" src='+imgSrc+' />'+
+    '<p>'+detail.title+'</p></a>')
 }
 
 export let photoDisplay = (detail) =>{
@@ -14,8 +16,8 @@ export let photoDisplay = (detail) =>{
   let detalsUrl=detail.urls.url[0]._content;
 
 
-  return '<div class="photo-detail-img"><img src="'+imgSrc+'"/></div>'+
-  		 '<div class="photo-detail-text">'+
+  return '<div class="photo-detail-img col-xs-12 col-md-6"><img src="'+imgSrc+'"/></div>'+
+  		 '<div class="photo-detail-text col-xs-12 col-md-6">'+
   		 	 '<div class="photo-detail-owner">'+detalsOwner+'</div>'+
   		 	 '<div class="photo-detail-taken">'+detalsTaken+'</div>'+
   		 	 '<div class="photo-detail-url"><a href="'+detalsUrl+'" target="_blank" >'+detalsUrl+'</a></div>'+
