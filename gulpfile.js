@@ -27,7 +27,7 @@ gulp.task('sass',function(){
         .pipe(sass())
         .pipe(autoPrefixer())
         .pipe(concat(config.dist.style.name))
-        .pipe(gulp.dest(config.dist.style.path))
+        //.pipe(gulp.dest(config.dist.style.path))
         .pipe(rename({
             suffix: '.min'
         }))

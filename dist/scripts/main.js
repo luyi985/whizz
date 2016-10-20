@@ -7739,21 +7739,75 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"e/U+97":296}],298:[function(require,module,exports){
-"use strict";
+'use strict';
 
-require("babel-polyfill");
+require('babel-polyfill');
 
-var _apiService = require("./services/apiService.js");
+var _state = require('./state.js');
 
-(0, _apiService.searchByTags)("girls", 2).done(function (data) {
-	console.dir(data);
-});
+var _apiService = require('./services/apiService.js');
+
+var _photoDisplayService = require('./services/photoDisplayService.js');
+
+var photoContainer = $("#js-photoDis");
+var loadMoreBtnSelect = '.js-loadMoreBtn';
+var categoriesSelect = '.js-categories';
+var categoryItemSelect = '.js-category-item';
+//------------------------------------------------------
+
+
+var loadPhoto = function loadPhoto(callBack) {
+	(0, _apiService.searchByTags)(_state.state.currentCategory, ++_state.state.currentPage).done(function (data) {
+		console.dir(data);
+		_state.state.currentPage = data.photos.page;
+		_state.state.totalPage = data.photos.pages;
+		data.photos.photo.map(function (item) {
+			photoContainer.append((0, _photoDisplayService.photoItem)(item));
+		});
+		if (callBack) {
+			callBack();
+		}
+	});
+};
+var loadCategory = function loadCategory() {
+	var categoryList = '<ul class="category-list"><li>' + _state.state.categories.map(function (cat) {
+		return "<a href=" + cat + " class='js-category-item'>" + cat + "</a>";
+	}).join("</li><li>") + "</li>";
+	$(categoriesSelect).html(categoryList);
+};
+var categoryChange = function categoryChange(e) {};
 
 (0, _apiService.getPhotoDetail)(30437411835).done(function (data) {
 	console.dir(data);
 });
 
-},{"./services/apiService.js":299,"babel-polyfill":1}],299:[function(require,module,exports){
+$("document").ready(function () {
+	loadCategory();
+	loadPhoto();
+
+	//-------------------------------------------------------	
+	$('body').on('click', loadMoreBtnSelect, function (e) {
+		if (_state.state.currentPage >= _state.state.totalPage) return;
+		var _this = $(this);
+		_this.attr("disabled", true).text("loading...");
+		loadPhoto(function () {
+			_this.attr("disabled", false).text('Load More');
+		});
+	});
+
+	$('body').on('click', categoryItemSelect, function (e) {
+		e.preventDefault();
+		$(categoryItemSelect).removeClass('active');
+		$(this).addClass('active');
+		$(photoContainer).html("");
+		_state.state.currentCategory = $(this).attr('href');
+		_state.state.totalPage = 0;
+		_state.state.currentPage = 0;
+		loadPhoto();
+	});
+});
+
+},{"./services/apiService.js":299,"./services/photoDisplayService.js":300,"./state.js":301,"babel-polyfill":1}],299:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7771,6 +7825,33 @@ var searchByTags = exports.searchByTags = function searchByTags(tags, currentPag
 
 var getPhotoDetail = exports.getPhotoDetail = function getPhotoDetail(id) {
 	return $.ajax(getDetailApi + id);
+};
+
+},{}],300:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+   value: true
+});
+var photoItem = exports.photoItem = function photoItem(detail) {
+   var imgSrc = "https://farm" + detail.farm + ".staticflickr.com/" + detail.server + "/" + detail.id + "_" + detail.secret + "_q.jpg";
+   return $('<a href="#" data-title="' + detail.title + '" class="photo-item"><img class="photo-item" src=' + imgSrc + ' /></a>');
+};
+
+var photoDisplay = exports.photoDisplay = function photoDisplay(datail) {};
+
+},{}],301:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var state = exports.state = {
+	currentCategory: "Flowers",
+	totalPage: 0,
+	currentPage: 0,
+	currentPhoto: null,
+	categories: ["Cats", "Dogs", "Flowers", "Trees", "Men", "Women", "Boys", "Girls"]
 };
 
 },{}]},{},[298])
