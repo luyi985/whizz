@@ -7750,9 +7750,12 @@ var _apiService = require('./services/apiService.js');
 var _photoDisplayService = require('./services/photoDisplayService.js');
 
 var photoContainer = $("#js-photoDis");
+var photoDetailsContainer = ".js-photo-details-container";
+var photoitemSelect = ".js-photo-item";
 var loadMoreBtnSelect = '.js-loadMoreBtn';
 var categoriesSelect = '.js-categories';
 var categoryItemSelect = '.js-category-item';
+
 //------------------------------------------------------
 
 
@@ -7775,17 +7778,17 @@ var loadCategory = function loadCategory() {
 	}).join("</li><li>") + "</li>";
 	$(categoriesSelect).html(categoryList);
 };
-var categoryChange = function categoryChange(e) {};
-
-(0, _apiService.getPhotoDetail)(30437411835).done(function (data) {
-	console.dir(data);
-});
 
 $("document").ready(function () {
+
+	//============Init======================================================================
+
 	loadCategory();
 	loadPhoto();
 
-	//-------------------------------------------------------	
+	//===========load more btn on click=================================================
+
+
 	$('body').on('click', loadMoreBtnSelect, function (e) {
 		if (_state.state.currentPage >= _state.state.totalPage) return;
 		var _this = $(this);
@@ -7795,15 +7798,37 @@ $("document").ready(function () {
 		});
 	});
 
+	//===========Category item on click=================================================
+
 	$('body').on('click', categoryItemSelect, function (e) {
 		e.preventDefault();
 		$(categoryItemSelect).removeClass('active');
 		$(this).addClass('active');
 		$(photoContainer).html("");
+		//------state update----------
 		_state.state.currentCategory = $(this).attr('href');
 		_state.state.totalPage = 0;
 		_state.state.currentPage = 0;
 		loadPhoto();
+	});
+
+	//===========Photo item on click=================================================
+
+	$('body').on('click', photoitemSelect, function (e) {
+		e.preventDefault();
+		//$(photoContainer).html("");
+		//-------state update-----------------
+		_state.state.currentPhoto = $(this).attr('data-id');
+		$(photoDetailsContainer).addClass("active");
+		(0, _apiService.getPhotoDetail)(_state.state.currentPhoto).done(function (data) {
+			$(photoDetailsContainer).find('h1').text(data.photo.title._content);
+			$(photoDetailsContainer).find(".js-photo-details-content").html((0, _photoDisplayService.photoDisplay)(data.photo));
+		});
+	});
+
+	$('body').on('click', '.js-photo-details-close', function (e) {
+		$(photoDetailsContainer).removeClass("active");
+		$(photoDetailsContainer).find(".js-photo-details-content").html('');
 	});
 });
 
@@ -7831,14 +7856,23 @@ var getPhotoDetail = exports.getPhotoDetail = function getPhotoDetail(id) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-   value: true
+  value: true
 });
 var photoItem = exports.photoItem = function photoItem(detail) {
-   var imgSrc = "https://farm" + detail.farm + ".staticflickr.com/" + detail.server + "/" + detail.id + "_" + detail.secret + "_q.jpg";
-   return $('<a href="#" data-title="' + detail.title + '" class="photo-item"><img class="photo-item" src=' + imgSrc + ' /></a>');
+  var imgSrc = "https://farm" + detail.farm + ".staticflickr.com/" + detail.server + "/" + detail.id + "_" + detail.secret + "_q.jpg";
+  return $('<a href="#" data-title="' + detail.title + '" data-id="' + detail.id + '" class="js-photo-item photo-item"><img class="photo-item" src=' + imgSrc + ' /></a>');
 };
 
-var photoDisplay = exports.photoDisplay = function photoDisplay(datail) {};
+var photoDisplay = exports.photoDisplay = function photoDisplay(detail) {
+  console.dir(detail);
+  var imgSrc = "https://farm" + detail.farm + ".staticflickr.com/" + detail.server + "/" + detail.id + "_" + detail.secret + "_b.jpg";
+  var detalsDescription = detail.description._content || "No description for this photo";
+  var detalsTaken = detail.dates.taken;
+  var detalsOwner = detail.owner.username;
+  var detalsUrl = detail.urls.url[0]._content;
+
+  return '<div class="photo-detail-img"><img src="' + imgSrc + '"/></div>' + '<div class="photo-detail-text">' + '<div class="photo-detail-owner">' + detalsOwner + '</div>' + '<div class="photo-detail-taken">' + detalsTaken + '</div>' + '<div class="photo-detail-url"><a href="' + detalsUrl + '" target="_blank" >' + detalsUrl + '</a></div>' + '<div class="photo-detail-description"><p>' + detalsDescription + '</p></div>' + '</div>';
+};
 
 },{}],301:[function(require,module,exports){
 "use strict";

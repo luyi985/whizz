@@ -6,9 +6,12 @@ import {photoDisplay, photoItem} from './services/photoDisplayService.js';
 
 
 let photoContainer= $("#js-photoDis");
+let photoDetailsContainer= ".js-photo-details-container";
+let photoitemSelect= ".js-photo-item";
 let loadMoreBtnSelect= '.js-loadMoreBtn';
 let categoriesSelect= '.js-categories';
 let categoryItemSelect= '.js-category-item';
+
 //------------------------------------------------------
 
 
@@ -34,27 +37,21 @@ let loadCategory = () =>{
 						"</li>";
 	$(categoriesSelect).html(categoryList);
 }
-let categoryChange = (e) =>{
-
-}
-
-
-
-
-getPhotoDetail(30437411835).done((data)=>{
-	console.dir(data);
-})
-
 
 
 
 
 $("document").ready(function(){
+
+	//============Init======================================================================
+
 	loadCategory();
 	loadPhoto();
 
 
-    //-------------------------------------------------------	
+    //===========load more btn on click=================================================
+
+
 	$('body').on('click',loadMoreBtnSelect,function(e){
 		if(state.currentPage>=state.totalPage) return;
 		let _this=$(this);
@@ -64,15 +61,37 @@ $("document").ready(function(){
 		})
 	});
 
+	//===========Category item on click=================================================
+
 	$('body').on('click',categoryItemSelect,function(e){
 		e.preventDefault();
 		$(categoryItemSelect).removeClass('active');
 		$(this).addClass('active');
 		$(photoContainer).html("");
+		//------state update----------
 		state.currentCategory=$(this).attr('href');
 		state.totalPage=0;
 		state.currentPage=0;
 		loadPhoto();
+	});
+
+	//===========Photo item on click=================================================
+
+	$('body').on('click',photoitemSelect,function(e){
+		e.preventDefault();
+		//$(photoContainer).html("");
+		//-------state update-----------------
+		state.currentPhoto=$(this).attr('data-id');
+		$(photoDetailsContainer).addClass("active");
+		getPhotoDetail(state.currentPhoto).done((data)=>{
+			$(photoDetailsContainer).find('h1').text(data.photo.title._content);
+			$(photoDetailsContainer).find(".js-photo-details-content").html(photoDisplay(data.photo));
+		})
+	});
+
+	$('body').on('click','.js-photo-details-close', function(e){
+		$(photoDetailsContainer).removeClass("active");
+		$(photoDetailsContainer).find(".js-photo-details-content").html('');
 	});
 
 })
